@@ -10,6 +10,7 @@ package com.example.weatherapp
 // Import necessary Android classes and components
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.Image
@@ -24,16 +25,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-import com.example.weatherapp.R // Importing the R file for resource access
+
 
 // The MainActivity class which is the entry point of the app
 class MainActivity : AppCompatActivity() {
     // The onCreate function: called when the activity is first created
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState) // Calls the super class's onCreate function
+        setTitle(R.string.app_name) // Set the title to "My Weather App" ADDED
+        supportActionBar?.setDisplayShowHomeEnabled(true) // Add this line
         // Set the content of this Activity, defining the UI
         setContent {
-            WeatherScreen() // Calling the Composable function WeatherScreen
+            MyApp() // Calling the Composable function WeatherScreen
         }
     }
 }
@@ -117,9 +120,10 @@ fun WeatherScreen() {
                 text = stringResource(id = R.string.pressure),
                 fontSize = 20.sp // Setting font size
             )
+
         }
     }
-}  // End of WeatherScreen function
+}
 
 
 
