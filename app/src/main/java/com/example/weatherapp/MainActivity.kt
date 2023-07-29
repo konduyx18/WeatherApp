@@ -28,7 +28,10 @@ import androidx.compose.ui.unit.sp
 
 
 // The MainActivity class which is the entry point of the app
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    private val currentConditionsViewModel: CurrentConditionsViewModel by viewModels()
+    private val forecastViewModel: ForecastViewModel by viewModels()
     // The onCreate function: called when the activity is first created
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState) // Calls the super class's onCreate function
