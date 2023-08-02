@@ -1,27 +1,33 @@
 package com.example.weatherapp
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.weatherapp.network.Api
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CurrentConditionsViewModel @Inject constructor(
-    private val api: Api
-) : ViewModel() {
-    private val _currentWeather = MutableStateFlow<CurrentWeatherResponse?>(null)
-    val currentWeather: StateFlow<CurrentWeatherResponse?> = _currentWeather
+class CurrentConditionsViewModel @Inject constructor(private val apiService: Api) : ViewModel() {
 
-    init {
-        getCurrentWeather()
+    private val _weatherData: MutableLiveData<WeatherData> = MutableLiveData()
+    val weatherData: LiveData<WeatherData>
+        get() = _weatherData
+
+    private var _currentZipCode: MutableLiveData<String> = MutableLiveData<String>().apply {
+        value = "55318" }
+
+    fun getZipCode(): LiveData<String> {
+        return _currentZipCode
     }
 
-    private fun getCurrentWeather() = viewModelScope.launch {
-        val response = api.getCurrentWeather("55318", "a3754787a20fc3b59a7dca0a6f336bf4")
-        _currentWeather.value = response
+    fun setZipCode(zipCode: String) {
+        _currentZipCode.value = zipCode
     }
+
+    fun viewAppeared() = viewModelScope.launch {
+        _weatherData.value = getZipCode().value?.let { apiService.getWeatherData(zip = it.toInt()) }
+    }
+
 }

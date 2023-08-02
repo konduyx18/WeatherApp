@@ -1,27 +1,33 @@
 package com.example.weatherapp
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.weatherapp.network.Api
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ForecastViewModel @Inject constructor(
-    private val api: Api
-) : ViewModel() {
-    private val _forecast = MutableStateFlow<ForecastResponse?>(null)
-    val forecast: StateFlow<ForecastResponse?> = _forecast
+class ForecastViewModel @Inject constructor(private val apiService: Api) : ViewModel() {
 
-    init {
-        getForecast()
+
+    private val _weatherData: MutableLiveData<DayForecastData> = MutableLiveData()
+    val weatherData: LiveData<DayForecastData>
+        get() = _weatherData
+
+    private val _currentZipCode: MutableLiveData<String> = MutableLiveData<String>()
+
+    private fun getZipCode(): LiveData<String> {
+        return _currentZipCode
+    }
+    fun setZipCode(zipCode: String) {
+        _currentZipCode.value = zipCode
+        viewAppeared()
+    }
+    private fun viewAppeared() = viewModelScope.launch {
+        _weatherData.value = getZipCode().value?.let { apiService.getForecastData(zip = it.toInt()) }
     }
 
-    private fun getForecast() = viewModelScope.launch {
-        val response = api.getForecast("55318", "a3754787a20fc3b59a7dca0a6f336bf4")
-        _forecast.value = response
-    }
 }
+

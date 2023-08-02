@@ -8,13 +8,15 @@
 package com.example.weatherapp
 
 // Import necessary Android classes and components
-import androidx.appcompat.app.AppCompatActivity
+//import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.Image
-import androidx.compose.material.Text
+//import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,31 +26,37 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dagger.hilt.android.AndroidEntryPoint
-import androidx.activity.viewModels
-
-
-
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 
 
 // The MainActivity class which is the entry point of the app
-@AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
-    private val currentConditionsViewModel: CurrentConditionsViewModel by viewModels()
-    private val forecastViewModel: ForecastViewModel by viewModels()
+class MainActivity : ComponentActivity() {
     // The onCreate function: called when the activity is first created
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState) // Calls the super class's onCreate function
-        setTitle(R.string.app_name) // Set the title to "My Weather App" ADDED
-        supportActionBar?.setDisplayShowHomeEnabled(true) // Add this line
+        //setTitle(R.string.app_name) // Set the title to "My Weather App" ADDED
+        //supportActionBar?.setDisplayShowHomeEnabled(true) // Add this line
         // Set the content of this Activity, defining the UI
         setContent {
-            MyApp() // Calling the Composable function WeatherScreen
+            val navController = rememberNavController()
+            NavHost(navController = navController, startDestination = "Start") {
+                this.composable("Start") {
+                    WeatherScreen()
+                }
+                composable("ForecastScreen"){
+                    MyApp()
+                }
+
+            }
         }
     }
 }
+
+
 // The Composable annotation allows this function to be used to define UI
-@Preview
+
 @Composable
 fun WeatherScreen() {
     // Creating an image painter from resources
@@ -131,6 +139,3 @@ fun WeatherScreen() {
         }
     }
 }
-
-
-

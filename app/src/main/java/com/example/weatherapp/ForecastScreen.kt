@@ -16,8 +16,8 @@
 
 package com.example.weatherapp
 
-import androidx.compose.material.Button
-import androidx.compose.material.Text
+//import androidx.compose.material.Button
+//import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
@@ -41,33 +41,36 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import kotlin.random.Random
-import androidx.compose.material.TopAppBar
+//import androidx.compose.material.TopAppBar
 import androidx.compose.ui.platform.LocalContext
-import androidx.appcompat.app.AppCompatActivity
+//import androidx.appcompat.app.AppCompatActivity
 
 
-@Composable
+/*@Composable
 fun MyApp() {
     // Creates an instance of NavHostController
-    val navController = rememberNavController()
+    //val navController = rememberNavController()
     // Get a reference to the current activity context
-    val activity = LocalContext.current as AppCompatActivity
+    //val activity = LocalContext.current as AppCompatActivity
 
     // A NavHost defines local navigation state and a set of
     // composable destinations -  can be navigated
-    NavHost(navController, startDestination = "mainScreen") {
+    *//*NavHost(navController, startDestination = "mainScreen") {
         composable("mainScreen") {
             MainScreen(navController)
             // Display the Action Bar when MainScreen is displayed
             activity.supportActionBar?.show() // Show action bar on main screen
-        }
-        composable("forecastScreen") {
+        }*//*
+        *//*composable("forecastScreen") {
             // Prepare data for 16 days of forecast
             val forecastItems = List(16) { index ->
                 DayForecast(
@@ -82,15 +85,15 @@ fun MyApp() {
                     pressure = 1000f + index,  // pressure increases each day
                     humidity = 80  // humidity stays constant
                 )
-            }
+            }*//*
             // Display the ForecastScreen
             ForecastScreen(forecastItems)
             activity.supportActionBar?.hide() // Hide action bar on forecast screen
         }
     }
-}
+}*/
 @Composable
-fun MainScreen(navController: NavHostController) {
+fun MyApp() {
     Box(
         modifier = Modifier
             .fillMaxSize() // Fill the maximum size
@@ -101,15 +104,16 @@ fun MainScreen(navController: NavHostController) {
         ) {
             WeatherScreen()  // Call WeatherScreen Composable
         }
-        Button(
+        /*Button(
             onClick = { navController.navigate("forecastScreen") }, // Navigate to ForecastScreen when button is clicked
             modifier = Modifier.align(Alignment.Center)
-        ) {
+        )*/ /*{
             Text("Forecast")  // Text of the button
-        }
+        }*/
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ForecastScreen(forecastItems: List<DayForecast>) {
     Column(
@@ -213,7 +217,7 @@ fun getTime(timestamp: Long): String {
     return sdf.format(date)
 }
 
-@Preview
+/*@Preview
 @Composable
 fun PreviewForecastScreen() {
     val forecastItems = List(16) { index ->
@@ -233,12 +237,10 @@ fun PreviewForecastScreen() {
         )
     }
     ForecastScreen(forecastItems)
-}
+}*/
 
-@Preview
+/*@Preview
 @Composable
 fun PreviewMyApp() {
     MyApp()
-}
-
-
+}*/
