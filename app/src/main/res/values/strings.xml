@@ -8,4 +8,10 @@
     <string name="humidity">Humidity %s%%</string>
     <string name="pressure">Pressure %s hPa</string>
     <string name="forecast_title">Forecast</string>
+    <string name="next_screen">Forecast</string>
+    <string name="date">%s %s</string>
+    <string name="temp">Temp: %s˚</string>
+    <string name="sunrise">Sunrise: %sam</string>
+    <string name="sunset">Sunset: %spm</string>
+
 </resources>
