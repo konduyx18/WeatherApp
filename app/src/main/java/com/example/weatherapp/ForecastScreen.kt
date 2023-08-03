@@ -16,43 +16,18 @@
 
 package com.example.weatherapp
 
-//import androidx.compose.material.Button
-//import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import java.text.SimpleDateFormat
-import java.util.*
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
-import kotlin.random.Random
-//import androidx.compose.material.TopAppBar
-import androidx.compose.ui.platform.LocalContext
-//import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.hilt.navigation.compose.hiltViewModel
+@Composable
+fun ForecastScreen(viewModel: ForecastViewModel = hiltViewModel()) {
+    val view = viewModel.weatherData.observeAsState()
+    LaunchedEffect(Unit) {
+        viewModel.viewAppeared()
+
+    }
+}
 
 
 /*@Composable
@@ -92,6 +67,7 @@ fun MyApp() {
         }
     }
 }*/
+/*
 @Composable
 fun MyApp() {
     Box(
@@ -102,18 +78,23 @@ fun MyApp() {
         Column(
             modifier = Modifier.align(Alignment.TopCenter)
         ) {
-            WeatherScreen()  // Call WeatherScreen Composable
+            WeatherScreen(navController)  // Call WeatherScreen Composable
         }
-        /*Button(
+        */
+/*Button(
             onClick = { navController.navigate("forecastScreen") }, // Navigate to ForecastScreen when button is clicked
             modifier = Modifier.align(Alignment.Center)
-        )*/ /*{
+        )*//*
+ */
+/*{
             Text("Forecast")  // Text of the button
-        }*/
+        }*//*
+
     }
 }
+*/
 
-@OptIn(ExperimentalMaterial3Api::class)
+/*@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ForecastScreen(forecastItems: List<DayForecast>) {
     Column(
@@ -215,7 +196,7 @@ fun getTime(timestamp: Long): String {
     val sdf = SimpleDateFormat("h:mm a", Locale.US)
     val date = Date(timestamp)
     return sdf.format(date)
-}
+}*/
 
 /*@Preview
 @Composable

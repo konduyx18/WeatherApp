@@ -10,28 +10,33 @@ package com.example.weatherapp
 // Import necessary Android classes and components
 //import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.Image
+import androidx.compose.material3.Button
 //import androidx.compose.material.Text
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
+import dagger.hilt.android.AndroidEntryPoint
 
 
 // The MainActivity class which is the entry point of the app
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     // The onCreate function: called when the activity is first created
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,10 +48,10 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             NavHost(navController = navController, startDestination = "Start") {
                 this.composable("Start") {
-                    WeatherScreen()
+                    WeatherScreen(navController)
                 }
                 composable("ForecastScreen"){
-                    MyApp()
+                    ForecastScreen()
                 }
 
             }
@@ -58,7 +63,11 @@ class MainActivity : ComponentActivity() {
 // The Composable annotation allows this function to be used to define UI
 
 @Composable
-fun WeatherScreen() {
+fun WeatherScreen(navController: NavHostController,viewModel: CurrentConditionsViewModel = hiltViewModel()) {
+    val view = viewModel.weatherData.observeAsState()
+    LaunchedEffect(Unit) {
+        viewModel.viewAppeared()
+    }
     // Creating an image painter from resources
     val image: Painter = painterResource(id = R.drawable.weather_sun)
 
@@ -69,7 +78,8 @@ fun WeatherScreen() {
             .padding(16.dp) // Adds padding of 16dp to all sides
     ) {
         Text(   // A Text composable for displaying text data
-            text = stringResource(id = R.string.city_name), // Getting string resource for city name
+            //text = stringResource(id = R.string.city_name), // Getting string resource for city name
+            text= view.value?.city.toString(),
             fontSize = 24.sp,  // Setting font size
             modifier = Modifier.align(Alignment.CenterHorizontally)  // Centering the text horizontally
         )
@@ -88,12 +98,15 @@ fun WeatherScreen() {
             ) {
                 Text(
                     // Getting string resource for temperature
-                    text = stringResource(id = R.string.temperature),
+                    text= stringResource(id = R.string.temperature,view.value?.main?.temp?.toInt().toString()),
+                    //text = view.value?.main?.temp?.toInt().toString(),
+                    //text = stringResource(id = R.string.feels_like),
                     fontSize = 70.sp // Setting font size
                 )
                 Text(
                     // Getting string resource for feels like
-                    text = stringResource(id = R.string.feels_like),
+                    text= stringResource(id = R.string.feels_like,view.value?.main?.feelsLike?.toInt().toString()),
+                    //text = stringResource(id = R.string.feels_like),
                     fontSize = 15.sp, // Setting font size
                 )
             }
@@ -101,12 +114,17 @@ fun WeatherScreen() {
             Spacer(modifier = Modifier.padding(horizontal = 16.dp))
 
             // An Image composable for displaying images
-            Image(
+            AsyncImage(
+                model = view.value?.iconUrl,
+                contentDescription = "image",
+                modifier = Modifier.size(100.dp),
+            )
+            /*Image(
                 painter = image,  // Set the painter as image
                 // Set content description as null, generally used for accessibility
                 contentDescription = null,
                 modifier = Modifier.size(100.dp) // Set the size of the image to 100dp
-            )
+            )*/
         }
         // A Spacer with vertical padding
         Spacer(modifier = Modifier.padding(vertical = 16.dp))
@@ -117,24 +135,36 @@ fun WeatherScreen() {
         ) {
             Text(
                 // Getting string resource for low temperature
-                text = stringResource(id = R.string.low_temperature),
+                text= stringResource(id = R.string.low_temperature,view.value?.main?.tempMin.toString()),
+                //text = view.value?.main?.tempMin?.toInt().toString(),
+                //text = stringResource(id = R.string.low_temperature),
                 fontSize = 20.sp // Setting font size
             )
             Text(
                 // Getting string resource for high temperature
-                text = stringResource(id = R.string.high_temperature),
+                text= stringResource(id = R.string.high_temperature,view.value?.main?.tempMax.toString()),
+                //text = view.value?.main?.tempMax?.toInt().toString(),
+                //text = stringResource(id = R.string.high_temperature),
                 fontSize = 20.sp // Setting font size
             )
             Text(
                 // Getting string resource for humidity
-                text = stringResource(id = R.string.humidity),
+                text= stringResource(id = R.string.humidity,view.value?.main?.humidity.toString()),
+                //text = view.value?.main?.humidity.toString(),
+                //text = stringResource(id = R.string.humidity),
                 fontSize = 20.sp // Setting font size
             )
             Text(
                 // Getting string resource for pressure
-                text = stringResource(id = R.string.pressure),
+                text= stringResource(id = R.string.pressure,view.value?.main?.pressure.toString()),
+                //text = stringResource(id = R.string.pressure),
                 fontSize = 20.sp // Setting font size
             )
+            Button(
+            onClick = { navController.navigate("forecastScreen") }, // Navigate to ForecastScreen when button is clicked
+            ){
+                Text("Forecast")  // Text of the button
+            }
 
         }
     }

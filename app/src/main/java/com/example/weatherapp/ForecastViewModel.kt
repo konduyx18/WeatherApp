@@ -25,9 +25,11 @@ class ForecastViewModel @Inject constructor(private val apiService: Api) : ViewM
         _currentZipCode.value = zipCode
         viewAppeared()
     }
-    private fun viewAppeared() = viewModelScope.launch {
-        _weatherData.value = getZipCode().value?.let { apiService.getForecastData(zip = it.toInt()) }
+    fun viewAppeared() = viewModelScope.launch {
+        //_weatherData.value = getZipCode().value?.let { apiService.getForecastData(zip = it.toInt()) }
+        _weatherData.value = getZipCode().value?.let { apiService.getForecastData(zip = 55318) }
     }
+
 
 }
 
