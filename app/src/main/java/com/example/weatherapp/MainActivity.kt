@@ -9,13 +9,17 @@ package com.example.weatherapp
 
 // Import necessary Android classes and components
 //import androidx.appcompat.app.AppCompatActivity
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 //import androidx.compose.material.Text
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
@@ -39,6 +43,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     // The onCreate function: called when the activity is first created
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState) // Calls the super class's onCreate function
         //setTitle(R.string.app_name) // Set the title to "My Weather App" ADDED
@@ -62,6 +67,7 @@ class MainActivity : ComponentActivity() {
 
 // The Composable annotation allows this function to be used to define UI
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WeatherScreen(navController: NavHostController,viewModel: CurrentConditionsViewModel = hiltViewModel()) {
     val view = viewModel.weatherData.observeAsState()
@@ -160,10 +166,17 @@ fun WeatherScreen(navController: NavHostController,viewModel: CurrentConditionsV
                 //text = stringResource(id = R.string.pressure),
                 fontSize = 20.sp // Setting font size
             )
+            val zipCode = viewModel.getZipCode().observeAsState()
             Button(
-            onClick = { navController.navigate("forecastScreen") }, // Navigate to ForecastScreen when button is clicked
+            onClick = { navController.navigate("forecastScreen")}, // Navigate to ForecastScreen when button is clicked
             ){
                 Text("Forecast")  // Text of the button
+            }
+            TextField(value = zipCode.value.toString(), onValueChange = {text-> viewModel.setZipCode(text)})
+            Button(
+                onClick = {},
+            ){
+                Text("Search")  // Text of the button
             }
 
         }
