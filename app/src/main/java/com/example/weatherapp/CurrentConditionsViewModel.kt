@@ -46,5 +46,39 @@ class CurrentConditionsViewModel @Inject constructor(private val apiService: Api
     fun viewAppeared() = viewModelScope.launch {
         _weatherData.value = getZipCode().value?.let { apiService.getWeatherData(zip = it.toInt()) }
     }
+//ADDED********************
+    private val _isError: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isError: LiveData<Boolean>
+    get() = _isError
 
+    fun validateAndSetZipCode(zipCode: String) {
+        if (zipCode.length == 5 && zipCode.all { it.isDigit() }) {
+            _currentZipCode.value = zipCode
+            _isError.value = false
+        } else {
+            _isError.value = true
+        }
+    }
+
+    fun setError(value: Boolean) {
+        _isError.value = value
+    }
+
+    fun searchWeatherData() {
+        val zipCode = _currentZipCode.value
+        if (zipCode != null && zipCode.length == 5 && zipCode.all { it.isDigit() }) {
+            viewModelScope.launch {
+                try {
+                    val weatherData = apiService.getWeatherData(zip = zipCode.toInt())
+                    _weatherData.postValue(weatherData)
+                    _isError.postValue(false) // Reset the error state
+                } catch (e: Exception) {
+                    _weatherData.postValue(null)
+                    _isError.postValue(true)
+                }
+            }
+        } else {
+            _isError.postValue(true)
+        }
+    }
 }
