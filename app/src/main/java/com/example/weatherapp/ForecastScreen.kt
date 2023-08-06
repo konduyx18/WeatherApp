@@ -43,6 +43,11 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -68,16 +73,35 @@ fun ForecastScreen(viewModel: ForecastViewModel = hiltViewModel()) {
     }
 }
 
+@Composable
+fun TitleBar(title: String) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(colorResource(id = R.color.baby_blue)) // Make sure to have this color in your colors.xml
+            .height(56.dp)
+            .padding(horizontal = 16.dp),
+    ) {
+        Text(
+            text = title,
+            modifier = Modifier.align(Alignment.Center),
+            color = Color.Black,
+            fontSize = 20.sp
+        )
+    }
+}
+
+
 
 @Composable
 fun EmptyView() {
     Text(text = "No data available.")
 }
 
-@Composable
+/*@Composable
 fun TitleBar(title: String) {
     Text(text = title, fontSize = 20.sp, modifier = Modifier.padding(16.dp))
-}
+}*/
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable

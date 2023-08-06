@@ -39,7 +39,7 @@ class CurrentConditionsViewModel @Inject constructor(private val apiService: Api
         return _currentZipCode
     }
     //  setZipCode() method allows updating the _currentZipCode value.
-    fun setZipCode(zipCode: String) {
+    fun setZipCode(zipCode: String) {//
         _currentZipCode.value = zipCode
     }
     // function is called when the view appears, triggering an action.

@@ -16,10 +16,7 @@ import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-//import androidx.compose.material.Text
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
@@ -37,6 +34,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import dagger.hilt.android.AndroidEntryPoint
+import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.Box
+import androidx.compose.ui.res.colorResource
+
 
 
 // The MainActivity class which is the entry point of the app
@@ -46,9 +49,6 @@ class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState) // Calls the super class's onCreate function
-        //setTitle(R.string.app_name) // Set the title to "My Weather App" ADDED
-        //supportActionBar?.setDisplayShowHomeEnabled(true) // Add this line
-        // Set the content of this Activity, defining the UI
         setContent {
             val navController = rememberNavController()
             NavHost(navController = navController, startDestination = "Start") {
@@ -64,10 +64,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-
 // The Composable annotation allows this function to be used to define UI
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WeatherScreen(navController: NavHostController,viewModel: CurrentConditionsViewModel = hiltViewModel()) {
     val view = viewModel.weatherData.observeAsState()
@@ -83,6 +80,22 @@ fun WeatherScreen(navController: NavHostController,viewModel: CurrentConditionsV
             .fillMaxSize() // Fills the max size of the parent layout
             .padding(16.dp) // Adds padding of 16dp to all sides
     ) {
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(colorResource(id = R.color.baby_blue)) // Use the blue color from your color.xml file
+                .height(56.dp)
+                .padding(horizontal = 16.dp),
+        ) {
+            Text(
+                text = "My Weather App",
+                modifier = Modifier.align(Alignment.Center),
+                color = Color.Black,
+                fontSize = 20.sp
+            )
+        }
+
         Text(   // A Text composable for displaying text data
             //text = stringResource(id = R.string.city_name), // Getting string resource for city name
             text= view.value?.city.toString(),
@@ -125,12 +138,7 @@ fun WeatherScreen(navController: NavHostController,viewModel: CurrentConditionsV
                 contentDescription = "image",
                 modifier = Modifier.size(100.dp),
             )
-            /*Image(
-                painter = image,  // Set the painter as image
-                // Set content description as null, generally used for accessibility
-                contentDescription = null,
-                modifier = Modifier.size(100.dp) // Set the size of the image to 100dp
-            )*/
+
         }
         // A Spacer with vertical padding
         Spacer(modifier = Modifier.padding(vertical = 16.dp))
@@ -167,18 +175,22 @@ fun WeatherScreen(navController: NavHostController,viewModel: CurrentConditionsV
                 fontSize = 20.sp // Setting font size
             )
             val zipCode = viewModel.getZipCode().observeAsState()
-            Button(
-            onClick = { navController.navigate("forecastScreen")}, // Navigate to ForecastScreen when button is clicked
-            ){
-                Text("Forecast")  // Text of the button
-            }
-            TextField(value = zipCode.value.toString(), onValueChange = {text-> viewModel.setZipCode(text)})
-            Button(
-                onClick = {},
-            ){
-                Text("Search")  // Text of the button
-            }
 
+            // Centering the Forecast button
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Button(
+                    onClick = { navController.navigate("forecastScreen") },
+                ) {
+                    Text("Forecast")
+                }
+            }
         }
     }
 }
+
+
