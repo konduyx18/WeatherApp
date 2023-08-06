@@ -1,3 +1,7 @@
+// data classes describe the structure expected from the weather API's response,
+// including day forecasts, main weather details, and city information.
+// By leveraging the Moshi library, these annotations allow seamless conversion between the JSON
+// response and Kotlin objects, simplifying the process of working with the API's data.
 package com.example.weatherapp
 
 import com.squareup.moshi.Json
@@ -10,7 +14,7 @@ data class DayForecast(
     @Json(name = "pressure")val pressure: Int,
     @Json(name = "humidity")val humidity: Int,
 )
-
+// holds the main weather details
 data class Main (
     @Json(name = "main") val main: DayForecast,
     @Json(name = "dt") val date: Long,
@@ -20,7 +24,7 @@ data class Main (
     val iconUrl: String
         get() = "https://openweathermap.org/img/wn/${weather.firstOrNull()?.icon}@2x.png"
 }
-
+// represents information related to the city's timezone and sun times
 data class City(
     @Json(name = "timezone") val timezone: Long,
     @Json(name = "sunrise") val sunrise: Long,
