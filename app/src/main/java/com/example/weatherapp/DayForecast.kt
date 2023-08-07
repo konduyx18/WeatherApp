@@ -8,32 +8,36 @@ import com.squareup.moshi.Json
 
 // define a data class: DayForecast
 data class DayForecast(
-    @Json(name = "temp") val temp: Float,
-    @Json(name = "temp_min") val tempmin: Float,
-    @Json(name = "temp_max") val tempmax: Float,
-    @Json(name = "pressure")val pressure: Int,
-    @Json(name = "humidity")val humidity: Int,
-)
+    @Json(name = "temp") val temp: ForecastTemp,
+    //@Json(name = "temp_min") val tempmin: Float,
+    //@Json(name = "temp_max") val tempmax: Float,
+    //@Json(name = "pressure")val pressure: Int,
+    //@Json(name = "humidity")val humidity: Int,
+    @Json(name = "sunrise") val sunrise: Long,
+    @Json(name = "sunset") val sunset: Long,
+    @Json(name = "weather")val weather: List<Icon>,
+){val iconUrl: String
+    get() = "https://openweathermap.org/img/wn/${weather.firstOrNull()?.icon}@2x.png"}
 // holds the main weather details
-data class Main (
-    @Json(name = "main") val main: DayForecast,
-    @Json(name = "dt") val date: Long,
+/*data class Main (
+    //@Json(name = "main") val main: DayForecast,
+    //@Json(name = "dt") val date: Long,
     @Json(name = "weather")val weather: List<Icon>,
         )
 {
     val iconUrl: String
         get() = "https://openweathermap.org/img/wn/${weather.firstOrNull()?.icon}@2x.png"
-}
+}*/
 // represents information related to the city's timezone and sun times
-data class City(
+/*data class City(
     @Json(name = "timezone") val timezone: Long,
     @Json(name = "sunrise") val sunrise: Long,
     @Json(name = "sunset") val sunset: Long,
-)
+)*/
 
 data class DayForecastData(
-    @Json(name = "list") val ForecastList: List<Main>,
-    @Json(name = "city") val City: City,
+    @Json(name = "list") val ForecastList: List<DayForecast>,
+    //@Json(name = "city") val City: City,
     )
 
 

@@ -32,7 +32,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
-import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -51,10 +50,12 @@ import androidx.compose.ui.res.colorResource
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ForecastScreen(viewModel: ForecastViewModel = hiltViewModel()) {
+fun ForecastScreen(zipCode: String, viewModel: ForecastViewModel = hiltViewModel(),) {
     val view = viewModel.weatherData.observeAsState()
-    val forecastList = view.value?.ForecastList  //added
+    val forecastList = view.value?.ForecastList
+    viewModel.setZipCode(zipCode)
     LaunchedEffect(Unit) {
+        viewModel.viewAppeared()
 
     }
     viewModel.viewAppeared()
@@ -66,7 +67,7 @@ fun ForecastScreen(viewModel: ForecastViewModel = hiltViewModel()) {
         LazyColumn {
             if (forecastList != null) {
                 items(forecastList.size) { item ->
-                    ForecastInfo(forecastList[item],view)
+                    ForecastInfo(forecastList[item])
                 }
             }
         }
@@ -78,7 +79,7 @@ fun TitleBar(title: String) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(colorResource(id = R.color.baby_blue)) // Make sure to have this color in your colors.xml
+            .background(colorResource(id = R.color.baby_blue))
             .height(56.dp)
             .padding(horizontal = 16.dp),
     ) {
@@ -90,33 +91,25 @@ fun TitleBar(title: String) {
         )
     }
 }
-
-
-
 @Composable
 fun EmptyView() {
     Text(text = "No data available.")
 }
 
-/*@Composable
-fun TitleBar(title: String) {
-    Text(text = title, fontSize = 20.sp, modifier = Modifier.padding(16.dp))
-}*/
-
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ForecastInfo(forecastItem: Main, view: State<DayForecastData?>) {
+fun ForecastInfo(forecastItem: DayForecast) {
 
     val formatTime: DateTimeFormatter = DateTimeFormatter.ofPattern("h:mm")
     val formatMonth: DateTimeFormatter = DateTimeFormatter.ofPattern("MMM")
     val sunriseTime =
         LocalDateTime.ofInstant(
-            view.value?.City?.sunrise?.let { Instant.ofEpochSecond(it) },
+            forecastItem.sunrise.let { Instant.ofEpochSecond(it) },
             ZoneId.of("America/Chicago")
         )
     val sunsetTime =
         LocalDateTime.ofInstant(
-            view.value?.City?.sunset?.let { Instant.ofEpochSecond(it) },
+            forecastItem.sunset?.let { Instant.ofEpochSecond(it) },
             ZoneId.of("America/Chicago")
         )
 
@@ -141,7 +134,7 @@ fun ForecastInfo(forecastItem: Main, view: State<DayForecastData?>) {
 
         Column(modifier = Modifier.padding(10.dp)) {
             Text(
-                text = stringResource(id = R.string.temperature, forecastItem.main.temp.toString()),
+                text = stringResource(id = R.string.temperature, forecastItem.temp.day.toString()),
                 fontSize = 12.sp
             )
             Spacer(modifier = Modifier.height(5.dp))
@@ -149,7 +142,7 @@ fun ForecastInfo(forecastItem: Main, view: State<DayForecastData?>) {
             Text(
                 text = stringResource(
                     id = R.string.high_temperature,
-                    forecastItem.main.tempmax.toInt().toString()
+                    forecastItem.temp.max.toInt().toString()
                 ),
                 fontSize = 12.sp
             )
@@ -165,7 +158,7 @@ fun ForecastInfo(forecastItem: Main, view: State<DayForecastData?>) {
             Text(
                 text = stringResource(
                     id = R.string.low_temperature,
-                    forecastItem.main.tempmin.toInt().toString()
+                    forecastItem.temp.min.toInt().toString()
                 ),
                 fontSize = 12.sp
             )
