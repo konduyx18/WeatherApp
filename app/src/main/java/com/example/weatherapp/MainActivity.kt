@@ -7,6 +7,7 @@
 
 package com.example.weatherapp
 
+// Import necessary Android classes and components
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -55,8 +56,11 @@ class MainActivity : ComponentActivity() {
                 this.composable("Start") {
                     WeatherScreen(navController)
                 }
-                composable("ForecastScreen"){
-                    ForecastScreen()
+                composable("ForecastScreen/{zipcode}"){
+                    val item = it.arguments?.getString("zipcode")
+                    if (item != null) {
+                        ForecastScreen(zipCode = item)
+                    }
                 }
 
             }
@@ -205,7 +209,9 @@ fun WeatherScreen(navController: NavHostController,viewModel: CurrentConditionsV
                 horizontalArrangement = Arrangement.Center
             ) {
                 Button(
-                    onClick = { navController.navigate("forecastScreen") },
+                    onClick = {
+                        val zipCodeNumber = zipCode.value
+                        navController.navigate("forecastScreen/$zipCodeNumber") },
                 ) {
                     Text("Forecast")
                 }
@@ -225,8 +231,7 @@ fun WeatherScreen(navController: NavHostController,viewModel: CurrentConditionsV
                     onClick = {
                         viewModel.validateAndSetZipCode(zipCode.value.toString())
                         if (!isError.value) {
-                            viewModel.searchWeatherData()
-                            //viewModel.viewAppeared()
+                            viewModel.viewAppeared()
                         }
                     }
                 ) {

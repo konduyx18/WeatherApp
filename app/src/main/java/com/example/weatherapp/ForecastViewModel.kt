@@ -28,7 +28,9 @@ class ForecastViewModel @Inject constructor(private val apiService: Api) : ViewM
     val weatherData: LiveData<DayForecastData>
         get() = _weatherData
 
-    private val _currentZipCode: MutableLiveData<String> = MutableLiveData<String>()
+    private val _currentZipCode: MutableLiveData<String> = MutableLiveData<String>().apply{
+        value = "55318"
+    }
 
     // function returns the _currentZipCode as LiveData.
     private fun getZipCode(): LiveData<String> {
@@ -38,13 +40,13 @@ class ForecastViewModel @Inject constructor(private val apiService: Api) : ViewM
     // This sets up a new ZIP code and fetches the weather data accordingly.
     fun setZipCode(zipCode: String) {
         _currentZipCode.value = zipCode
-        viewAppeared()
+        //viewAppeared()
     }
     // function launches a coroutine within the scope of the ViewModel (viewModelScope) and
     // fetches forecast data for the ZIP code.
     fun viewAppeared() = viewModelScope.launch {
-        //_weatherData.value = getZipCode().value?.let { apiService.getForecastData(zip = it.toInt()) }
-        _weatherData.value = apiService.getForecastData(zip = 55101)
+        _weatherData.value = getZipCode().value?.let { apiService.getForecastData(zip = it.toInt()) }
+        //_weatherData.value = apiService.getForecastData(zip = 55101)
     }
 }
 
